@@ -1,14 +1,3 @@
-<html lang="pt-br">
-<head>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-
-</head>
-
-<body>
-
 <?php
 session_start();
     include('./config.php');
@@ -17,34 +6,28 @@ session_start();
         die("Erro na conexão: ".$con->connect_error);
     }
 
-    $query = "select * from pacientes order by paciente_id";
-    $result = mysqli_query($con, $query);
-    $linha = mysqli_fetch_assoc($result);
-    $num_rows = mysqli_num_rows($result);
-    
-    $paciente_id = $_GET['paciente_id'];
-    $paciente_nome = $_GET['paciente_nome'];
-    $dt_nasc = $_GET['dt_nasc'];
-    $sexo = $_GET['sexo'];
-    $endereco = $_GET['endereco'];
-    $numero = $_GET['numero'];
-    $complemento = $_GET['complemento'];
-    $bairro = $_GET['bairro'];
-    $cidade = $_GET['complemento'];
-    $cep = $_GET['cep'];
-    $email = $_GET['email'];
-    $celular = $_GET['celular'];
-    $telefone = $_GET['telefone'];
-    $peso = $_GET['peso'];
-    $altura = $_GET['altura'];
-    $hipertensao = $_GET['hipertensao'];
-    $diabetes = $_GET['diabetes'];
-    $fumante = $_GET['fumante'];
-    $cardiaco = $_GET['cardiaco'];
-    $observacoes = $_GET['observacoes'];
-    $medicacao = $_GET['medicacao'];
     
 ?>
+
+<html lang="pt-br">
+
+
+
+<head>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<link href="/crud/css/datatables.css" rel="stylesheet" >
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="/crud/js/datatables.js"></script>
+
+<script>
+    $(document).ready( function () {
+    $('#example').DataTable();
+} );
+</script>
+</head>
+
+<body>
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Pacientes</h1>
@@ -71,61 +54,58 @@ session_start();
     </div>
   </div>
 </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-sm">
-            <div class="body row">
-                <div class="col-md-4 mb-3">
-                    <input class="form-control" id="myInput" type="text" placeholder="Busca por nome">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label class="form-check-label" for="">Hipertensão</label>
-                    <input type="checkbox" class="form-check-input" type="checkbox" role="switch" id="" name="">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label class="form-check-label" for="">Diabetes</label>
-                    <input type="checkbox" class="form-check-input" type="checkbox" role="switch" id="" name="">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label class="form-check-label" for="">Fumante</label>
-                    <input type="checkbox" class="form-check-input" type="checkbox" role="switch" id="" name="">
-                </div>
-                <div class="col-md-2 mb-3">
-                    <label class="form-check-label" for="">Doença Cardíaca</label>
-                    <input type="checkbox" class="form-check-input" type="checkbox" role="switch" id="" name="">
-                </div>
-            </div>
+    <div class="table-responsive" >
+        <table class="table table-striped table-sm display" id="example">
             <thead class="thead-dark">
                 <tr>
-                    
-                    <th><i></i> NOME</th>
-                    <th><i></i> DATA DE NASCIMENTO</th>
-                    <th><i></i> SEXO</th>
-                    <th><i></i></th>
+                    <th>NOME</th>
+                    <th>DATA DE NASCIMENTO</th>
+                    <th>SEXO</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                if($num_rows > 0) {
-                    while($row = $result->fetch_assoc()){
-                        echo "
+            <?php
+                $query = "select * from pacientes order by paciente_id";
+                $result = mysqli_query($con, $query);
+                $row = mysqli_fetch_assoc($result);
+                
+                if($result) {
+                    while($row = mysqli_fetch_assoc($result)){
+                        $id = $row['paciente_id'];
+                        $paciente_nome = $row['paciente_nome'];
+                        $dt_nasc = $row['dt_nasc'];
+                        $sexo = $row['sexo'];
+                        echo '
                         <tr>
-                            <td>".$row['paciente_nome']."</td>
-                            <td>".$row['dt_nasc']."</td>
-                            <td>".$row['sexo']."</td>
-                            <td class='text-right'>
-                                <button type='submit' color='grey' title='Visualizar' data-feather='eye' data-bs-toggle='modal' data-bs-target='#staticBackdrop' id=".$row['paciente_id']."></button>
-                                ⠀⠀
-                                <button type='submit' color='blue' title='Editar' data-feather='edit'></button>
-                                ⠀⠀
-                                <button type='delete' color='red' title='Remover' data-feather='trash'></button>
-                            </td>
-                        </tr>";
+                        <td>'.$paciente_nome.'</td>
+                        <td>'.$dt_nasc.'</td>
+                        <td>'.$sexo.'</td>
+
+                        <td>
+                        <button color="grey" title="Visualizar" data-feather="eye" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><a href=""></a></button>
+                        ⠀⠀
+                        <button class="btn btn-primary" title="Editar" ><a href="pacientes/editar.php?editarid='.$id.'" class="text-light">EDITAR</a></button>
+                        ⠀⠀
+                        <button color="red" title="Remover" ><a href="?p=pacientes/delete?deleteid='.$id.'" class="text-light">DELETAR</a></button>
+                        </td>
+
+                        </tr>';
                     }
-                } else {
-                    echo "";
-                }
-                ?>
+                } 
+            ?>
+
+
+
             </tbody>
+            <tfoot>
+            <tr>
+                <th>NOME</th>
+                <th>DATA DE NASCIMENTO</th>
+                <th>SEXO</th>
+                <th></th>
+            </tr>
+            </tfoot>
         </table>
     </div>
 <?php
